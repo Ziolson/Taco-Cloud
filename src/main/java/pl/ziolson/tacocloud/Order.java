@@ -1,5 +1,6 @@
 package pl.ziolson.tacocloud;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -11,8 +12,12 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Entity
+@Table(name="Taco_Order")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date placedAt;
     @NotBlank(message = "Podanie imienia i nazwiska jest obowiązkowe.")
@@ -32,5 +37,10 @@ public class Order {
     @Digits(integer = 3, fraction = 0, message = "Nieprawidłowykod CVV.")
     private String ccCVV;
 
+    @ManyToMany(targetEntity = Taco.class)
     private List<Taco> tacos = new ArrayList<>();
+
+    void placedAt() {
+        this.placedAt = new Date();
+    }
 }
